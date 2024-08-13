@@ -1,0 +1,14 @@
+[package]
+name = "tempest-nature"
+version = "0.1.0"
+authors = ["Marcelo Santos <rocha.mer21@gmail.com>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+wasm-bindgen-futures = "0.4.43"
+dioxus = { version = "0.5", features = ["desktop"] }
+
+# Debug
+dioxus-logger = "0.5.1"
