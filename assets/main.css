@@ -87,6 +87,16 @@ body {
   display: none;
 }
 
+.location-input-show-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+label {
+  margin: 5px; /* Adicione um espaço entre o input e a label, se necessário */
+}
+
 .temperature {
   font-size: 48px;
   font-weight: bold;
