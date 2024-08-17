@@ -10,7 +10,7 @@ use chrono::{Local, TimeZone, Utc};
 enum Route {
     #[route("/")]
     Home {},
-    #[route("/blog/:id")]
+    #[route("/weather/:id")]
     Weather { id: usize, name_city: String },
 }
 
