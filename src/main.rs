@@ -118,12 +118,11 @@ fn app() -> Element {
 #[component]
 fn Weather(id: usize, name_city: String) -> Element {
     let weathers = use_resource(move || async move { get_weather("Serra,BR").await });
+    let local_now = Local::now();
+    let formatted = local_now.format("%A, %H:%M").to_string();
 
     rsx! {
     style {{include_str!("../assets/tailwind.css")}}
-
-        // Link { to: Route::Home {}, "Go to counter" }
-        // "Blog post { id} - and {name_city}"
         body { class:"bg-gray-100 p-8 flex justify-center items-center min-h-screen",
 
           match &*weathers.read() {
@@ -149,7 +148,7 @@ fn Weather(id: usize, name_city: String) -> Element {
 
                             div {class:"bg-yellow-100 rounded-3xl p-6 flex flex-col items-center mb-8",
                                 div { class:"text-6xl font-bold text-yellow-500 mb-4", "{resp.main.temp}°C"}
-                                div { class:"text-gray-500", "Monday, 16:00"}
+                                div { class:"text-gray-500", "{formatted}"}
                                 div { class:"flex items-center justify-center mt-8",
                                 span {class:"text-lg font-medium text-gray-600", "{resp.weather[0].description}"}
                                 }
