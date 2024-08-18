@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use dioxus::prelude::*;
+use dioxus::{desktop::{tao::{event_loop::EventLoop, window::Window}, WindowBuilder}, prelude::*};
 use dioxus_logger::tracing::{info, Level};
 use reqwest;
 use serde::{Deserialize, Serialize};
@@ -56,9 +56,13 @@ struct Sys {
 fn main() {
     // Init logger
     dioxus_logger::init(Level::INFO).expect("failed to init logger");
-    info!("starting app");
+    info!("starting app"); 
 
-    launch(app)
+    let config = dioxus::desktop::Config::new().with_menu(None);
+
+    LaunchBuilder::desktop().with_cfg(config).launch(app);
+
+   
 }
 
 #[component]
@@ -235,7 +239,27 @@ fn Home() -> Element {
     //const SVG_FILE: &str = manganis::mg!(file("assets/file.svg"));
     rsx! {
         style {{include_str!("../assets/tailwind.css")}}
-        body {
+        body { class:"bg-gray-100 flex items-center justify-center min-h-screen",
+            div { class:"bg-white p-8 rounded-lg shadow-lg max-w-lg w-full",
+            h1 { class:"text-4xl font-bold text-gray-800 text-center mb-6", "Tempest Nature"}
+            
+            div { class:"flex items-center space-x-3",
+            input {
+                    r#type:"text", 
+                    placeholder:"DIGITE SUA CIDADE, EX: São Paulo, BR" ,
+                    class:"w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"}
+               
+        Link {
+            class:"text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800",
+
+              to: Route::Weather {
+                  id: 22,
+                  name_city: "name".to_string()
+              },
+              "➔"
+          }
+    }
+    }
 
 
             //body {
@@ -268,15 +292,7 @@ fn Home() -> Element {
               //          label {"ex: Sao Paulo, BR"}
 
 
-                       Link {
-                         class:"text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800",
-
-                           to: Route::Weather {
-                               id: 22,
-                               name_city: "name".to_string()
-                           },
-                           "Go to blog"
-                       }
+                      
 
                  }
 
