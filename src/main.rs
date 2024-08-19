@@ -1,10 +1,10 @@
 #![allow(non_snake_case)]
 
-use dioxus::{desktop::{tao::{event_loop::EventLoop, window::Window}, WindowBuilder}, prelude::*};
+use dioxus::prelude::*;
 use dioxus_logger::tracing::{info, Level};
-use reqwest;
-use serde::{Deserialize, Serialize};
-use chrono::{Local, TimeZone, Utc};
+
+mod api;
+mod utils;
 
 #[derive(Clone, Routable, Debug, PartialEq)]
 enum Route {
@@ -14,44 +14,7 @@ enum Route {
     Weather { id: usize, name_city: String },
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-struct Location {
-    lat: f64,
-    lon: f64,
-}
 
-#[derive(Deserialize, Debug, Default)]
-struct WeatherResponse {
-    weather: Vec<Weather>,
-    main: Main,
-    wind: Wind,
-    name: String,
-    sys: Sys,
-}
-
-#[derive(Deserialize, Debug, Default)]
-struct Weather {
-    description: String,
-}
-
-#[derive(Deserialize, Debug, Default)]
-struct Main {
-    temp: f64,
-    humidity: f64,
-    pressure: f64,
-}
-
-#[derive(Deserialize, Debug, Default)]
-struct Wind {
-    speed: f64,
-}
-
-#[derive(Deserialize, Debug, Default)]
-struct Sys {
-    country: String,
-    sunrise: i64,
-    sunset: i64
-}
 
 fn main() {
     // Init logger
@@ -117,10 +80,8 @@ fn app() -> Element {
 
 #[component]
 fn Weather(id: usize, name_city: String) -> Element {
-    let weathers = use_resource(move || async move { get_weather("Serra,BR").await });
-    let local_now = Local::now();
-    let formatted = local_now.format("%A, %H:%M").to_string();
-
+    let weathers = use_resource(move || async move { api::get_weather("Serra,BR").await });
+    
     rsx! {
     style {{include_str!("../assets/tailwind.css")}}
         body { class:"bg-gray-100 p-8 flex justify-center items-center min-h-screen",
@@ -148,7 +109,7 @@ fn Weather(id: usize, name_city: String) -> Element {
 
                             div {class:"bg-yellow-100 rounded-3xl p-6 flex flex-col items-center mb-8",
                                 div { class:"text-6xl font-bold text-yellow-500 mb-4", "{resp.main.temp}°C"}
-                                div { class:"text-gray-500", "{formatted}"}
+                                div { class:"text-gray-500", "{utils::get_day_and_hours_now()}"}
                                 div { class:"flex items-center justify-center mt-8",
                                 span {class:"text-lg font-medium text-gray-600", "{resp.weather[0].description}"}
                                 }
@@ -187,8 +148,8 @@ fn Weather(id: usize, name_city: String) -> Element {
                                 div {class:"bg-gray-100 p-6 rounded-lg",
                                     h3 {class:"text-gray-500 mb-2", "Sunrise & Sunset"}
                                     div { class:"text-gray-700",
-                                        div{ "{converte_unix_time_in_hours(resp.sys.sunrise)} AM"}
-                                        div{ "{converte_unix_time_in_hours(resp.sys.sunset)} PM"}
+                                        div{ "{utils::converte_unix_time_in_hours(resp.sys.sunrise)} AM"}
+                                        div{ "{utils::converte_unix_time_in_hours(resp.sys.sunset)} PM"}
                                         }
                                         }
 
@@ -304,73 +265,4 @@ fn Home() -> Element {
     }
 }
 
-async fn get_weather(city_name: &str) -> reqwest::Result<WeatherResponse> {
-    // let response = reqwest::get("https://api.ipify.org").await?;
-    // let ip = response.text().await?;
 
-    // let mut location_lat_long = Location { lat: 0.0, lon: 0.0 };
-
-    // if city_name != "none" {
-    //     location_lat_long = get_lat_lon(ip.clone()).await?;
-
-    //     println!("{:?}", location_lat_long);
-    // }
-
-    // println!("{:?}", location_lat_long);
-
-    let city: Vec<&str> = city_name.split(",").collect();
-    let resp_weather = reqwest::get(
-        format!("https://api.openweathermap.org/data/2.5/weather?q={},{}&units=metric&appid=11a70b5b6c6d329b4725068885de6f6d", city[0], city[1]),
-    )
-    .await?
-    .json::<WeatherResponse>()
-    .await?;
-
-    // println!("{:?}", city);
-
-    // if city.len() == 3 {
-    //     resp_weather = reqwest::get(format!("https://api.openweathermap.org/data/2.5/weather?q={},{},{}&units=metric&appid=11a70b5b6c6d329b4725068885de6f6d", city[0], city[1], city[2])).await?.json::<WeatherResponse>().await?;
-    //     println!("w -> {:?}", resp_weather);
-    // }
-
-    // if city.len() == 2 {
-    //     resp_weather = reqwest::get(
-    //         format!("https://api.openweathermap.org/data/2.5/weather?q={},{}&units=metric&appid=11a70b5b6c6d329b4725068885de6f6d", city[0], city[1]),
-    //     )
-    //     .await?
-    //     .json::<WeatherResponse>()
-    //     .await?;
-
-    //     println!("w -> {:?}", resp_weather);
-    // }
-    //let url_weather = format!("https://api.openweathermap.org/data/2.5/weather?q={city_name},{state_code},{country_code}&appid={api_key}");
-
-    Ok(resp_weather)
-}
-
-async fn get_lat_lon(ip: String) -> reqwest::Result<Location> {
-    let url = format!("{}{}", "http://ip-api.com/json/", ip);
-
-    let response = reqwest::get(&url).await?.json::<Location>().await?;
-    let local: Location = Location {
-        lat: response.lat,
-        lon: response.lon,
-    };
-
-    Ok(local)
-}
-
-fn converte_unix_time_in_hours(time: i64) -> String {
-        // O timestamp Unix em segundos (UTC)
-        let timestamp_utc = time;
-
-        // Converte o timestamp para um objeto DateTime no UTC
-        let datetime_utc = Utc.timestamp_opt(timestamp_utc, 0).unwrap();
-    
-        // Converte para a hora no fuso horário UTC-3
-        let datetime_utc_minus = datetime_utc.with_timezone(&Local);
-    
-        let hora_utc_minus = datetime_utc_minus.format("%H:%M:%S").to_string();
-
-        return hora_utc_minus;    
-}
