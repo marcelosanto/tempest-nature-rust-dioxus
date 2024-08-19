@@ -13,7 +13,8 @@ pub enum Route {
 
 #[component]
 pub fn Weather(id: usize, name_city: String) -> Element {
-    let weathers = use_resource(move || async move { api::get_weather("Serra,BR").await });
+    let mut city_name = use_signal(|| name_city);
+    let mut weathers = use_resource(move || async move { api::get_weather(city_name()).await });
 
     rsx! {
     style {{include_str!("../assets/tailwind.css")}}
@@ -25,7 +26,12 @@ pub fn Weather(id: usize, name_city: String) -> Element {
                 div {class:"flex",
                         div {class:"flex flex-col w-1/3",
                             div {class:"relative mb-8",
-                               input { r#type:"text", placeholder:"Search for places...", class:"w-full bg-gray-100 p-4 rounded-full pl-12 focus:outline-none" }
+                            form { onsubmit: move |event| { 
+                                city_name.set(event.value());
+                                weathers.restart()
+                             },
+                               input { r#type:"text", name:"city_name", placeholder:"Search for places...", class:"w-full bg-gray-100 p-4 rounded-full pl-12 focus:outline-none", 
+                               }
                                svg {
                                            class: "absolute top-1/2 left-4 transform -translate-y-1/2 w-6 h-6 text-gray-500",
                                            xmlns: "http://www.w3.org/2000/svg",
@@ -37,6 +43,7 @@ pub fn Weather(id: usize, name_city: String) -> Element {
                                                clip_rule: "evenodd",
                                            }
                                        }
+                                    }
           }
 
 
@@ -128,7 +135,7 @@ pub fn Weather(id: usize, name_city: String) -> Element {
 
 #[component]
 pub fn Home() -> Element {
-    // let mut name = use_signal(|| String::from(""));
+    let mut name = use_signal(|| String::from(""));
     //const SVG_FILE: &str = manganis::mg!(file("assets/file.svg"));
     rsx! {
         style {{include_str!("../assets/tailwind.css")}}
@@ -139,13 +146,14 @@ pub fn Home() -> Element {
                         input {
                                 r#type:"text",
                                 placeholder:"DIGITE SUA CIDADE, EX: São Paulo, BR" ,
-                                class:"w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"}
+                                class:"w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                                oninput: move |event| name.set(event.value())}
 
                         Link {
                             class:"text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800",
                             to: Route::Weather {
                                 id: 22,
-                                name_city: "name".to_string()
+                                name_city: name()
                             },
                             "➔"
                         }

@@ -42,7 +42,7 @@ pub struct Sys {
     pub sunset: i64
 }
 
-pub async fn get_weather(city_name: &str) -> reqwest::Result<WeatherResponse> {
+pub async fn get_weather(city_name: String) -> reqwest::Result<WeatherResponse> {
     // let response = reqwest::get("https://api.ipify.org").await?;
     // let ip = response.text().await?;
 
