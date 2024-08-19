@@ -133,67 +133,25 @@ pub fn Home() -> Element {
     rsx! {
         style {{include_str!("../assets/tailwind.css")}}
         body { class:"bg-gray-100 flex items-center justify-center min-h-screen",
-            div { class:"bg-white p-8 rounded-lg shadow-lg max-w-lg w-full",
-            h1 { class:"text-4xl font-bold text-gray-800 text-center mb-6", "Tempest Nature"}
+                div { class:"bg-white p-8 rounded-lg shadow-lg max-w-lg w-full",
+                    h1 { class:"text-4xl font-bold text-gray-800 text-center mb-6", "Tempest Nature"}
+                    div { class:"flex items-center space-x-3",
+                        input {
+                                r#type:"text",
+                                placeholder:"DIGITE SUA CIDADE, EX: São Paulo, BR" ,
+                                class:"w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"}
 
-            div { class:"flex items-center space-x-3",
-            input {
-                    r#type:"text",
-                    placeholder:"DIGITE SUA CIDADE, EX: São Paulo, BR" ,
-                    class:"w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"}
-
-        Link {
-            class:"text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800",
-
-              to: Route::Weather {
-                  id: 22,
-                  name_city: "name".to_string()
-              },
-              "➔"
-          }
-    }
-    }
-
-
-            //body {
-            //   class: "bg-gray-100 flex justify-center items-center min-h-screen",
-            //   style {{include_str!("../assets/tailwind.css")}}
-            // div { class: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4",
-            //   div { class:"bg-orange-500 text-white p-6 rounded-lg shadow-lg",
-            //               div { class:"flex flex-col items-center",
-            //               h2 {class:"text-lg font-semibold", "New York"}
-            //               div { class:"flex items-center justify-center mt-4",
-            //               span{ class:"text-5xl font-bold", "22°"}
-
-            //   }
-            //                   div { class:"mt-4 text-sm",
-            //                       p {"MPH"}
-            //                       p{"20°/17°"}
-            //                       p{"40%"}
-            //   }
-            //   }
-            //          }
-
-              //    form { class:"location-input-show-display",
-              //          input {r#type: "text",
-              //            class: "location-input",
-              //            id:"locationInput",
-              //            name: "city",
-              //            placeholder: "Digite sua localização",
-              //            autofocus:true
-              //          }
-              //          label {"ex: Sao Paulo, BR"}
-
-
-
-
-                 }
-
-              // p {"Home"}
-              // input {class:"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white",r#type: "text", id: "name", name: "{name}", oninput: move |event| name.set(event.value()) }
-
-              //}
-              //}
+                        Link {
+                            class:"text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800",
+                            to: Route::Weather {
+                                id: 22,
+                                name_city: "name".to_string()
+                            },
+                            "➔"
+                        }
+                    }
+                }
+        }
 
     }
 }
