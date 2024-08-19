@@ -1,6 +1,6 @@
+use dotenv::dotenv;
 use reqwest;
 use serde::{Deserialize, Serialize};
-use dotenv::dotenv;
 use std::env;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -11,11 +11,11 @@ struct Location {
 
 #[derive(Deserialize, Debug, Default)]
 pub struct WeatherResponse {
-    pub  weather: Vec<Weather>,
-    pub  main: Main,
+    pub weather: Vec<Weather>,
+    pub main: Main,
     pub wind: Wind,
-    pub   name: String,
-    pub  sys: Sys,
+    pub name: String,
+    pub sys: Sys,
 }
 
 #[derive(Deserialize, Debug, Default)]
@@ -25,21 +25,21 @@ pub struct Weather {
 
 #[derive(Deserialize, Debug, Default)]
 pub struct Main {
-    pub  temp: f64,
+    pub temp: f64,
     pub humidity: f64,
     pub pressure: f64,
 }
 
 #[derive(Deserialize, Debug, Default)]
 pub struct Wind {
-    pub  speed: f64,
+    pub speed: f64,
 }
 
 #[derive(Deserialize, Debug, Default)]
 pub struct Sys {
     pub country: String,
     pub sunrise: i64,
-    pub sunset: i64
+    pub sunset: i64,
 }
 
 pub async fn get_weather(city_name: String) -> reqwest::Result<WeatherResponse> {
@@ -58,11 +58,19 @@ pub async fn get_weather(city_name: String) -> reqwest::Result<WeatherResponse> 
 
     dotenv().ok();
 
-let api_key = env::var("OPENWEATHER_API_KEY").expect("A variável OPENWEATHER_API_KEY deve estar definida");
-    let city: Vec<&str> = city_name.split(",").collect();
-    let resp_weather = reqwest::get(
-        format!("https://api.openweathermap.org/data/2.5/weather?q={},{}&units=metric&appid={}", city[0], city[1], api_key),
-    )
+    let api_key = env::var("OPENWEATHER_API_KEY")
+        .expect("A variável OPENWEATHER_API_KEY deve estar definida");
+
+    let city : String = city_name.split_whitespace() // Divide a string em palavras, ignorando espaços extras
+    .collect::<Vec<&str>>() // Coleta as palavras em um vetor
+    .join(" ") // Junta as palavras com um único espaço entre elas
+    .replace(" ,", ",") // Remove espaços antes das vírgulas
+    .replace(", ", ","); // Remove espaços depois das vírgulas
+
+    let resp_weather = reqwest::get(format!(
+        "https://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid={}",
+        city, api_key
+    ))
     .await?
     .json::<WeatherResponse>()
     .await?;
@@ -70,13 +78,13 @@ let api_key = env::var("OPENWEATHER_API_KEY").expect("A variável OPENWEATHER_AP
     // println!("{:?}", city);
 
     // if city.len() == 3 {
-    //     resp_weather = reqwest::get(format!("https://api.openweathermap.org/data/2.5/weather?q={},{},{}&units=metric&appid=11a70b5b6c6d329b4725068885de6f6d", city[0], city[1], city[2])).await?.json::<WeatherResponse>().await?;
+    //     resp_weather = reqwest::get(format!("https://api.openweathermap.org/data/2.5/weather?q={},{},{}&units=metric&appid={}", city[0], city[1], city[2])).await?.json::<WeatherResponse>().await?;
     //     println!("w -> {:?}", resp_weather);
     // }
 
     // if city.len() == 2 {
     //     resp_weather = reqwest::get(
-    //         format!("https://api.openweathermap.org/data/2.5/weather?q={},{}&units=metric&appid=11a70b5b6c6d329b4725068885de6f6d", city[0], city[1]),
+    //         format!("https://api.openweathermap.org/data/2.5/weather?q={},{}&units=metric&appid={}", city[0], city[1]),
     //     )
     //     .await?
     //     .json::<WeatherResponse>()

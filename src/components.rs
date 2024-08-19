@@ -1,4 +1,5 @@
 use dioxus::{hooks::use_resource, prelude::*};
+use dioxus_logger::tracing::info;
 
 mod api;
 mod utils;
@@ -13,8 +14,10 @@ pub enum Route {
 
 #[component]
 pub fn Weather(id: usize, name_city: String) -> Element {
+    let mut entrada = use_signal(|| "".to_string());
     let mut city_name = use_signal(|| name_city);
     let mut weathers = use_resource(move || async move { api::get_weather(city_name()).await });
+
 
     rsx! {
     style {{include_str!("../assets/tailwind.css")}}
@@ -22,15 +25,23 @@ pub fn Weather(id: usize, name_city: String) -> Element {
 
           match &*weathers.read() {
               Some(Ok(resp)) => rsx! {
-                div {class:"bg-white rounded-3xl shadow-lg p-8 max-w-5xl w-full",
-                div {class:"flex",
-                        div {class:"flex flex-col w-1/3",
-                            div {class:"relative mb-8",
-                            form { onsubmit: move |event| { 
-                                city_name.set(event.value());
-                                weathers.restart()
-                             },
+                div {
+                    class:"bg-white rounded-3xl shadow-lg p-8 max-w-5xl w-full",
+                div {
+                    class:"flex",
+                        div {
+                            class:"flex flex-col w-1/3",
+                            div {
+                                class:"relative mb-8",
+                            
                                input { r#type:"text", name:"city_name", placeholder:"Search for places...", class:"w-full bg-gray-100 p-4 rounded-full pl-12 focus:outline-none", 
+                               oninput: move |e| entrada.set(e.value()), // Atualiza o valor da entrada
+            onkeydown: move |e| {
+                if e.code() == Code::Enter {
+                    info!("e: {entrada:?}"); // 13 é o código da tecla Enter
+                    city_name.set(entrada()); // Define o valor da string quando Enter é pressionado
+                }
+            },
                                }
                                svg {
                                            class: "absolute top-1/2 left-4 transform -translate-y-1/2 w-6 h-6 text-gray-500",
@@ -43,8 +54,9 @@ pub fn Weather(id: usize, name_city: String) -> Element {
                                                clip_rule: "evenodd",
                                            }
                                        }
-                                    }
+                                    
           }
+          
 
 
                             div {class:"bg-yellow-100 rounded-3xl p-6 flex flex-col items-center mb-8",
