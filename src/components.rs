@@ -16,7 +16,7 @@ pub enum Route {
 pub fn Weather(id: usize, name_city: String) -> Element {
     let mut entrada = use_signal(|| "".to_string());
     let mut city_name = use_signal(|| name_city);
-    let mut weathers = use_resource(move || async move { api::get_weather(city_name()).await });
+    let weathers = use_resource(move || async move { api::get_weather(city_name()).await });
 
 
     rsx! {
@@ -122,10 +122,10 @@ pub fn Weather(id: usize, name_city: String) -> Element {
                                 }
 
                                 div { class:"bg-gray-100 p-6 rounded-lg",
-                                    h3 {class:"text-gray-500 mb-2", "Air Quality"}
+                                    h3 {class:"text-gray-500 mb-2", "Pressure"}
                                     div { class:"flex items-center",
-                                        span{ class:"text-4xl font-bold text-red-500", "105"}
-                                        div { class:"ml-4 text-gray-600", "Unhealthy"}
+                                        span{ class:"text-4xl font-bold text-red-500", "{resp.main.pressure}"}
+                                        //div { class:"ml-4 text-gray-600", "Unhealthy"}
                                     }
           }
           }

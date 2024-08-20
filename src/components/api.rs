@@ -97,14 +97,14 @@ pub async fn get_weather(city_name: String) -> reqwest::Result<WeatherResponse> 
     Ok(resp_weather)
 }
 
-pub async fn get_lat_lon(ip: String) -> reqwest::Result<Location> {
-    let url = format!("{}{}", "http://ip-api.com/json/", ip);
+// pub async fn get_lat_lon(ip: String) -> reqwest::Result<Location> {
+//     let url = format!("{}{}", "http://ip-api.com/json/", ip);
 
-    let response = reqwest::get(&url).await?.json::<Location>().await?;
-    let local: Location = Location {
-        lat: response.lat,
-        lon: response.lon,
-    };
+//     let response = reqwest::get(&url).await?.json::<Location>().await?;
+//     let local: Location = Location {
+//         lat: response.lat,
+//         lon: response.lon,
+//     };
 
-    Ok(local)
-}
+//     Ok(local)
+// }
