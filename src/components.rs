@@ -32,7 +32,7 @@ pub fn Weather(id: usize, name_city: String) -> Element {
                                 class:"flex flex-col w-1/3",
                                 div {
                                     class:"relative mb-8",
-            
+
                                 input { r#type:"text", name:"city_name", placeholder:"Search for places...", class:"w-full bg-gray-100 p-4 rounded-full pl-12 focus:outline-none",
                                     oninput: move |e| entrada.set(e.value()), // Atualiza o valor da entrada
                                     onkeydown: move |e| {
@@ -53,11 +53,11 @@ pub fn Weather(id: usize, name_city: String) -> Element {
                                                 clip_rule: "evenodd",
                                             }
                                         }
-            
+
             }
-            
-            
-            
+
+
+
                                 div {class:"bg-yellow-100 rounded-3xl p-6 flex flex-col items-center mb-8",
                                     div { class:"text-6xl font-bold text-yellow-500 mb-4", "{resp.main.temp}°C"}
                                     div { class:"text-gray-500", "{utils::get_day_and_hours_now()}"}
@@ -68,7 +68,7 @@ pub fn Weather(id: usize, name_city: String) -> Element {
                                         p {class:"text-gray-600", "Rain - 30%"}
                                     }
                                 }
-            
+
                                 div { class:"flex items-center mt-auto",
                                 img {src:"https://via.placeholder.com/80x80", alt:"Location", class:"w-12 h-12 rounded-full mr-4"}
                                     div {
@@ -76,7 +76,7 @@ pub fn Weather(id: usize, name_city: String) -> Element {
                                     }
                                     }
                             }
-            
+
                             div {
                             class:"w-2/3 pl-8 flex flex-col justify-center",
                                 div {class:"grid grid-cols-3 gap-6",
@@ -87,7 +87,7 @@ pub fn Weather(id: usize, name_city: String) -> Element {
                                     div {class:"ml-4 text-gray-600", "Normal"}
                                         }
                             }
-            
+
                                     div {class:"bg-gray-100 p-6 rounded-lg",
                                         h3 {class:"text-gray-500 mb-2", "Wind Status"}
                                         div {class:"flex items-center",
@@ -95,7 +95,7 @@ pub fn Weather(id: usize, name_city: String) -> Element {
                                         span {class:"ml-2 text-lg text-gray-500", "km/h"}
                                         }
                                     }
-            
+
                                     div {class:"bg-gray-100 p-6 rounded-lg",
                                         h3 {class:"text-gray-500 mb-2", "Sunrise & Sunset"}
                                         div { class:"text-gray-700",
@@ -103,7 +103,7 @@ pub fn Weather(id: usize, name_city: String) -> Element {
                                             div{ "{utils::converte_unix_time_in_hours(resp.sys.sunset)} PM"}
                                             }
                                             }
-            
+
                                     div {class:"bg-gray-100 p-6 rounded-lg",
                                         h3 {class:"text-gray-500 mb-2", "Humidity"}
                                         div {class:"flex items-center",
@@ -111,7 +111,7 @@ pub fn Weather(id: usize, name_city: String) -> Element {
                                         div {class:"ml-4 text-gray-600", "Normal"}
             }
             }
-            
+
                                     div {class:"bg-gray-100 p-6 rounded-lg",
                                         h3 {class:"text-gray-500 mb-2", "Visibility"}
                                         div {class:"flex items-center",
@@ -119,7 +119,7 @@ pub fn Weather(id: usize, name_city: String) -> Element {
                                         span {class:"ml-2 text-lg text-gray-500","km"}
                                     }
                                     }
-            
+
                                     div { class:"bg-gray-100 p-6 rounded-lg",
                                         h3 {class:"text-gray-500 mb-2", "Pressure"}
                                         div { class:"flex items-center",
@@ -130,8 +130,8 @@ pub fn Weather(id: usize, name_city: String) -> Element {
             }
             }
             }
-            
-            
+
+
                     }
                 },
                 Some(Err(e)) => rsx! { p { "Loading weather failed, {e}" } },
@@ -145,6 +145,7 @@ pub fn Weather(id: usize, name_city: String) -> Element {
 pub fn Home() -> Element {
     let mut name = use_signal(|| String::from(""));
     //const SVG_FILE: &str = manganis::mg!(file("assets/file.svg"));
+
     rsx! {
         style { {include_str!("../assets/tailwind.css")} }
         body { class: "bg-gray-100 flex items-center justify-center min-h-screen",

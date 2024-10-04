@@ -61,11 +61,12 @@ pub async fn get_weather(city_name: String) -> reqwest::Result<WeatherResponse> 
     let api_key = env::var("OPENWEATHER_API_KEY")
         .expect("A variável OPENWEATHER_API_KEY deve estar definida");
 
-    let city : String = city_name.split_whitespace() // Divide a string em palavras, ignorando espaços extras
-    .collect::<Vec<&str>>() // Coleta as palavras em um vetor
-    .join(" ") // Junta as palavras com um único espaço entre elas
-    .replace(" ,", ",") // Remove espaços antes das vírgulas
-    .replace(", ", ","); // Remove espaços depois das vírgulas
+    let city: String = city_name
+        .split_whitespace() // Divide a string em palavras, ignorando espaços extras
+        .collect::<Vec<&str>>() // Coleta as palavras em um vetor
+        .join(" ") // Junta as palavras com um único espaço entre elas
+        .replace(" ,", ",") // Remove espaços antes das vírgulas
+        .replace(", ", ","); // Remove espaços depois das vírgulas
 
     let resp_weather = reqwest::get(format!(
         "https://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid={}",
