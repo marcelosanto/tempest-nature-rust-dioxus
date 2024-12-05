@@ -13,6 +13,8 @@
 -   Suporte para múltiplas unidades (Celsius e Fahrenheit).
 
 ## Capturas de Tela
+https://github.com/user-attachments/assets/3a20c0fe-85eb-4adf-8c5a-e765d22dcc34
+
 
 ## Requisitos
 
