@@ -1,9 +1,9 @@
 
-# Tempest WeatherApp
+# Tempest Nature
 
 ## Descrição
 
-**WeatherApp** é um aplicativo simples de previsão do tempo desenvolvido em Rust usando o framework Dioxus para a interface do usuário e consumindo a API da OpenWeather para fornecer dados meteorológicos em tempo real. Este projeto demonstra a construção de uma interface gráfica com Rust e Dioxus, junto com a integração de uma API externa.
+**Tempest Nature** é um aplicativo simples de previsão do tempo desenvolvido em Rust usando o framework Dioxus para a interface do usuário e consumindo a API da OpenWeather para fornecer dados meteorológicos em tempo real. Este projeto demonstra a construção de uma interface gráfica com Rust e Dioxus, junto com a integração de uma API externa.
 
 ## Funcionalidades
 
